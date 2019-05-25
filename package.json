@@ -1,0 +1,15 @@
+{
+  "name": "bedrock-ledger-test-cli",
+  "version": "0.0.1-dev",
+  "description": "Bedrock Ledger Test Command Line Interface",
+  "main": "index.js",
+  "dependencies": {
+    "bedrock": "^1.17.0",
+    "bedrock-ledger-context": "^11.0.0",
+    "web-ledger-client": "^3.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-digitalbazaar": "^2.0.0"
+  }
+}
