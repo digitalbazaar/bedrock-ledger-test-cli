@@ -25,6 +25,7 @@ bedrock.events.on('bedrock.started', async () => {
   try {
     await work();
   } catch(e) {
+    console.error('bedrock.started failed when trying to initialize work');
     console.error(e.message);
   }
   bedrock.exit();
@@ -53,7 +54,7 @@ async function _getRecord({id, ledgerClient}) {
     const result = await ledgerClient.getRecord({id});
     console.log(`Record details:\n${JSON.stringify(result, null, 2)}`);
   } catch(e) {
-    console.error(`get record failed for ${id}`);
+    console.error(`command get record failed for ${id}`);
     console.error(e);
   }
 }
@@ -75,7 +76,7 @@ async function _sendOperation({ledgerClient}) {
     console.log(
       `Operation sent successfully.\n${JSON.stringify(operation, null, 2)}`);
   } catch(e) {
-    console.error('send record failed.');
+    console.error('command send record failed.');
     console.error(e);
   }
 }
