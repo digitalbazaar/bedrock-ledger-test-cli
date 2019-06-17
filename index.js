@@ -49,25 +49,35 @@ async function work() {
 }
 
 async function _getRecord({id, ledgerClient}) {
-  const result = await ledgerClient.getRecord({id});
-  console.log(`Record details:\n${JSON.stringify(result, null, 2)}`);
+  try {
+    const result = await ledgerClient.getRecord({id});
+    console.log(`Record details:\n${JSON.stringify(result, null, 2)}`);
+  } catch(e) {
+    console.error(`get record failed for ${id}`);
+    console.error(e);
+  }
 }
 
 async function _sendOperation({ledgerClient}) {
-  const creator = await ledgerClient.getTargetNode();
-  const operation = {
-    '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
-    creator,
-    type: 'CreateWebLedgerRecord',
-    record: {
-      '@context': constants.TEST_CONTEXT_V1_URL,
-      id: `https://example.com/transaction/${uuid()}`,
-      price: Math.floor(Math.random() * 1000000000000),
-    }
-  };
-  await ledgerClient.sendOperation({operation});
-  console.log(
-    `Operation sent successfully.\n${JSON.stringify(operation, null, 2)}`);
+  try {
+    const creator = await ledgerClient.getTargetNode();
+    const operation = {
+      '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
+      creator,
+      type: 'CreateWebLedgerRecord',
+      record: {
+        '@context': constants.TEST_CONTEXT_V1_URL,
+        id: `https://example.com/transaction/${uuid()}`,
+        price: Math.floor(Math.random() * 1000000000000),
+      }
+    };
+    await ledgerClient.sendOperation({operation});
+    console.log(
+      `Operation sent successfully.\n${JSON.stringify(operation, null, 2)}`);
+  } catch(e) {
+    console.error('send record failed.');
+    console.error(e);
+  }
 }
 
 bedrock.start();
