@@ -13,7 +13,7 @@
     "eslint-config-digitalbazaar": "^2.0.0"
   },
   "scripts": {
-    "send": "node index.js -h example.com --send",
-    "base": "node index.js -h example.com"
+    "send": "node index.js --send",
+    "base": "node index.js"
   }
 }
