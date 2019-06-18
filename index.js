@@ -18,6 +18,7 @@ bedrock.events.on('bedrock-cli.init', () => bedrock.program
   .option('-h, --hostname <value>', 'The ledger host.')
   .option('-k, --ignoreSslErrors', 'Use strict SSL.')
   .option('-s, --send', 'Send a demonstration operation.')
+  .option('-r, --recordPath <value>', 'A path to a json record to be sent.')
   .option('-g, --getRecordId <value>', 'Get a record by ID.')
 );
 
@@ -32,8 +33,22 @@ bedrock.events.on('bedrock.started', async () => {
   bedrock.exit();
 });
 
+// gets or creates a default record
+function getRecord(path) {
+  if(path) {
+    // must have extension .json or .js
+    return require(path);
+  }
+  return {
+    '@context': constants.TEST_CONTEXT_V1_URL,
+    id: `https://example.com/transaction/${uuid()}`,
+    price: Math.floor(Math.random() * 1000000000000),
+  };
+}
+
 async function work() {
-  const {getRecordId, hostname, ignoreSslErrors, send} = bedrock.program;
+  const {getRecordId, recordPath,
+    hostname, ignoreSslErrors, send} = bedrock.program;
   const rejectUnauthorized = !ignoreSslErrors;
   if(!hostname) {
     throw new Error('hostname is a required parameter.');
@@ -43,7 +58,8 @@ async function work() {
     httpsAgent: https.Agent({rejectUnauthorized}),
   });
   if(send) {
-    return _sendOperation({ledgerClient});
+    const record = getRecord(recordPath);
+    return _sendOperation({ledgerClient, record});
   }
   if(getRecordId) {
     return _getRecord({id: getRecordId, ledgerClient});
@@ -60,18 +76,15 @@ async function _getRecord({id, ledgerClient}) {
   }
 }
 
-async function _sendOperation({ledgerClient}) {
+
+async function _sendOperation({ledgerClient, record}) {
   try {
     const creator = await ledgerClient.getTargetNode();
     const operation = {
       '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
       creator,
       type: 'CreateWebLedgerRecord',
-      record: {
-        '@context': constants.TEST_CONTEXT_V1_URL,
-        id: `https://example.com/transaction/${uuid()}`,
-        price: Math.floor(Math.random() * 1000000000000),
-      }
+      record
     };
     await ledgerClient.sendOperation({operation});
     console.log(
