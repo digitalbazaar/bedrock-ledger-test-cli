@@ -12,6 +12,9 @@
     "eslint": "^5.16.0",
     "eslint-config-digitalbazaar": "^2.0.0"
   },
+  "bin": {
+    "ledger-cli": "./index.js"
+  },
   "scripts": {
     "send": "node index.js -k --send",
     "base": "node index.js -k"
