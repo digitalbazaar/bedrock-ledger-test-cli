@@ -1,6 +1,6 @@
-## bedrock-ledger-test-cli
+# bedrock-ledger-test-cli
 
-Setup:
+## Setup:
 
   - You need to have a [web ledger node](https://github.com/digitalbazaar/bedrock-ledger-app-template/tree/initial) already running somewhere.
   - You then use that node as the --hostName or -h to the cli 

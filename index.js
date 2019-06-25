@@ -75,8 +75,7 @@ async function _getRecord({id, ledgerClient}) {
     const result = await ledgerClient.getRecord({id});
     console.log(`Record details:\n${JSON.stringify(result, null, 2)}`);
   } catch(e) {
-    console.error(`command get record failed for ${id}.`,
-      e);
+    console.error(`command get record failed for ${id}.`, e);
   }
 }
 
@@ -93,8 +92,7 @@ async function _sendOperation({ledgerClient, record}) {
     console.log(
       `Operation sent successfully.\n${JSON.stringify(operation, null, 2)}`);
   } catch(e) {
-    console.error('command send record failed.',
-      e);
+    console.error('command send record failed.', e);
   }
 }
 
