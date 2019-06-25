@@ -20,7 +20,7 @@ bedrock.events.on('bedrock-cli.init', () => bedrock.program
   .option('-h, --hostname <value>', 'The ledger host.')
   .option('-k, --ignoreSslErrors', 'Use strict SSL.')
   .option('-s, --send', 'Send a demonstration operation.')
-  .option('-r, --recordPath <value>', 'A path to a json record to be sent.')
+  .option('-r, --recordFile <value>', 'A path to a json record to be sent.')
   .option('-g, --getRecordId <value>', 'Get a record by ID.')
 );
 
@@ -29,14 +29,14 @@ bedrock.events.on('bedrock.started', async () => {
     await work();
   } catch(e) {
     console.error(
-      'event bedrock.started failed when trying to initialize work.');
-    console.error(e.message);
+      'event bedrock.started failed when trying to initialize work.',
+      e.message);
   }
   bedrock.exit();
 });
 
-// gets or creates a default record
-function getRecord(path) {
+// opens a path to a record or loads a default object.
+function _openRecord(path) {
   if(path) {
     // must have extension .json or .js
     return require(path);
@@ -49,8 +49,10 @@ function getRecord(path) {
 }
 
 async function work() {
-  const {getRecordId, recordPath,
-    hostname, ignoreSslErrors, send} = bedrock.program;
+  const {
+    getRecordId, recordFile,
+    hostname, ignoreSslErrors, send
+  } = bedrock.program;
   const rejectUnauthorized = !ignoreSslErrors;
   if(!hostname) {
     throw new Error('hostname is a required parameter.');
@@ -60,7 +62,7 @@ async function work() {
     httpsAgent: https.Agent({rejectUnauthorized}),
   });
   if(send) {
-    const record = getRecord(recordPath);
+    const record = _openRecord(recordFile);
     return _sendOperation({ledgerClient, record});
   }
   if(getRecordId) {
@@ -73,11 +75,10 @@ async function _getRecord({id, ledgerClient}) {
     const result = await ledgerClient.getRecord({id});
     console.log(`Record details:\n${JSON.stringify(result, null, 2)}`);
   } catch(e) {
-    console.error(`command get record failed for ${id}.`);
-    console.error(e);
+    console.error(`command get record failed for ${id}.`,
+      e);
   }
 }
-
 
 async function _sendOperation({ledgerClient, record}) {
   try {
@@ -92,8 +93,8 @@ async function _sendOperation({ledgerClient, record}) {
     console.log(
       `Operation sent successfully.\n${JSON.stringify(operation, null, 2)}`);
   } catch(e) {
-    console.error('command send record failed.');
-    console.error(e);
+    console.error('command send record failed.',
+      e);
   }
 }
 
