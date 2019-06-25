@@ -20,7 +20,8 @@ bedrock.events.on('bedrock-cli.init', () => bedrock.program
   .option('-h, --hostname <value>', 'The ledger host.')
   .option('-k, --ignoreSslErrors', 'Use strict SSL.')
   .option('-s, --send', 'Send a demonstration operation.')
-  .option('-r, --recordFile <value>', 'A path to a json record to be sent.')
+  .option(
+    '-r, --recordFile <value>', 'A path to a JSON record file to be sent.')
   .option('-g, --getRecordId <value>', 'Get a record by ID.')
 );
 
