@@ -30,7 +30,7 @@ bedrock.events.on('bedrock.started', async () => {
   } catch(e) {
     console.error(
       'event bedrock.started failed when trying to initialize work.',
-      e.message);
+      e);
   }
   bedrock.exit();
 });
